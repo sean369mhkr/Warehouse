@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -20,19 +19,21 @@ def callback():
 
     try:
         handler.handle(body, signature)
+        print("good")
+        print("good")
     except InvalidSignatureError:
+        print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
 
     return 'OK'
 
 # 學你說話
+    
 @handler.add(MessageEvent, message=TextMessage)
-def echo(event):
-    # if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
+def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text)
-    )
+        TextSendMessage(text=event.message.text))
 
 if __name__ == "__main__":
     app.run()
