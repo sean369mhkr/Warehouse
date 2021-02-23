@@ -1,2 +1,2 @@
-web: gunicorn app_core:app
+web: gunicorn linebot:app
 
