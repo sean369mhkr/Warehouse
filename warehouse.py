@@ -39,8 +39,10 @@ def callback():
 def handle_message(event):
     if event.message.text[0]=="#":
         sql=Postgres.main(event.message.text)
-        if event.message.text[1].upper()=="W":
-            get_V=sql.write()
+        if event.message.text[1]=="+":
+            get_V=sql.add()
+        elif event.message.text[1]=="-":
+            get_V=sql.reduce()
         elif event.message.text[1].upper()=="R":
             get_V=sql.read()
         else:

@@ -18,29 +18,57 @@ Created on Wed Feb 24 09:32:34 2021
 #     app.run()
 import os
 import psycopg2
+import datetime
+now=datetime.datetime.now()
+date=now.strftime("%Y/%m/%d")
 class main():
     def __init__(self, Text):
         self.return_value=""
-        self.return_value+="\n__init__\n"
+#        self.return_value+="\n__init__\n"
         self.Text=Text.split("\n")
         self.Text.pop(0)
-        # if Text[1].upper=="W":
-        #     self.write()
-        # elif Text[1].upper=="R":
-        #     self.read()
-        # else:
-        #     self.return_value+="No this type "+Text[1]
-        #     self.Ntype()
-    def write(self):
-        self.return_value+="write\n"
+        DATABASE_URL = os.popen('heroku config:get DATABASE_URL -a linebot0223').read()[:-1]
+        self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        self.cursor = self.conn.cursor()
+        datetime.datetime.now
+    def add(self):
         for i in self.Text:
-            self.return_value+=i+"\n"
-        return self.return_value
+            inputdata=i.split(" ")
+            item=inputdata[0]
+            count=inputdata[1]
+            unit=inputdata[2]
+            SQL_order = "INSERT INTO warehouse (item, count, unit, date) VALUES ('"+item+"',"+count+", '"+unit+"', '"+date+"');"
+            try:
+                self.cursor.execute(SQL_order)
+                self.conn.commit()
+                self.return_value+="Success"
+            except:
+                self.return_value+="Fail\n"
+                self.return_value+="例子:雞蛋 2 顆\n"
+            self.cursor.close()
+            self.conn.close()
+            return self.return_value
+            
+    def reduce(self):
+        pass
+#        self.return_value+="write\n"
+#        for i in self.Text:
+#            self.return_value+=i+"\n"
+#        return self.return_value
     def read(self):
-        self.return_value+="read\n"
-        for i in self.Text:
-            self.return_value+=i+"\n"
+        SQL_order = "SELECT * FROM warehouse;"
+        self.cursor.execute(SQL_order)
+        temp=self.cursor.fetchall()
+        self.cursor.close()
+        self.conn.close()
+        for i in temp:
+            self.return_value+=' '.join(map(str, i))
+            self.return_value+="\n"
         return self.return_value
+#        self.return_value+="read\n"
+#        for i in self.Text:
+#            self.return_value+=i+"\n"
+#        return self.return_value
     def ntype(self):
         self.return_value+="No this type"
         return self.return_value
