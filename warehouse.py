@@ -2,12 +2,15 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+import configparser
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 app = Flask(__name__)
 
 # LINE 聊天機器人的基本資料
-line_bot_api = LineBotApi('QWkFT44dkUM3TsCvNQUG8XHkAWAc1cVD2SISNjMeYttWbUGA476WTF4vSpEglds1FLIFOo18qXD4l8OriJiVDtegPxtzfHkTKZqA9ADp6fG8suDLISzZLTKc4x7K2JWmvdpYCYYMAToRZQPo7IMNUgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('58c2f6775b9492c2da817c73d37e6f9b')
+line_bot_api = LineBotApi(config.get('line-bot', 'channel_access_token')) #Channel access token
+handler = WebhookHandler(config.get('line-bot', 'channel_secret')) #Channel secret
 
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
@@ -19,8 +22,6 @@ def callback():
 
     try:
         handler.handle(body, signature)
-        print("good")
-        print("good")
     except InvalidSignatureError:
         print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
