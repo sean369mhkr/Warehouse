@@ -30,14 +30,20 @@ class main():
         DATABASE_URL = os.environ['DATABASE_URL']
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cursor = self.conn.cursor()
-        datetime.datetime.now
     def add(self):
         for i in self.Text:
             inputdata=i.split(" ")
             item=inputdata[0]
             count=inputdata[1]
             unit=inputdata[2]
-            SQL_order = "INSERT INTO warehouse (item, count, unit, date) VALUES ('"+item+"',"+count+", '"+unit+"', '"+date+"');"
+            SQL_order = f"SELECT * FROM warehouse WHERE item='{item}';"
+            self.cursor.execute(SQL_order)
+            temp=self.cursor.fetchone()
+            if temp==None:
+                SQL_order = f"INSERT INTO warehouse (item, count, unit, date) VALUES ('{item}',{count}, '{unit}', '{date}');"            
+            else:
+                count=str(float(temp[1])+float(count))
+                SQL_order = f"UPDATE warehouse SET count = {count} WHERE item ='{item}'"
             try:
                 self.cursor.execute(SQL_order)
                 self.conn.commit()
@@ -45,9 +51,10 @@ class main():
             except:
                 self.return_value+="Fail\n"
                 self.return_value+="例子:雞蛋 2 顆\n"
-            self.cursor.close()
-            self.conn.close()
-            return self.return_value
+                break
+        self.cursor.close()
+        self.conn.close()
+        return self.return_value
             
     def reduce(self):
         pass
