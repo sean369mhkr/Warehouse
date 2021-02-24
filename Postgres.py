@@ -24,13 +24,13 @@ class main():
         self.return_value+="\n__init__\n"
         self.Text=Text.split("\n")
         self.Text.pop(0)
-        if Text[1].upper=="W":
-            self.write()
-        elif Text[1].upper=="R":
-            self.read()
-        else:
-            self.return_value+="No this type "+Text[1]
-            return self.return_value
+        # if Text[1].upper=="W":
+        #     self.write()
+        # elif Text[1].upper=="R":
+        #     self.read()
+        # else:
+        #     self.return_value+="No this type "+Text[1]
+        #     self.Ntype()
     def write(self):
         self.return_value+="write\n"
         for i in self.Text:
@@ -40,6 +40,9 @@ class main():
         self.return_value+="read\n"
         for i in self.Text:
             self.return_value+=i+"\n"
+        return self.return_value
+    def ntype(self):
+        self.return_value+="No this type"
         return self.return_value
 
 # DATABASE_URL = os.popen('heroku config:get DATABASE_URL -a linebot0223').read()[:-1]

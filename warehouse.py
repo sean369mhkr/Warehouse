@@ -38,7 +38,13 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text[0]=="#":
-        get_V=Postgres.main(event.message.text)
+        sql=Postgres.main(event.message.text)
+        if event.message.text[1].upper()=="W":
+            get_V=sql.write()
+        elif event.message.text[1].upper()=="R":
+            get_V=sql.read()
+        else:
+            get_V=sql.ntype()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=get_V))
