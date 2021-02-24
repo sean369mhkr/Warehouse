@@ -3,6 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import configparser
+import Postgres
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -36,7 +37,12 @@ def callback():
     
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if event.message.text=="My info":
+    if event.message.text[0]=="#":
+        get_V=Postgres.main(event.message.text)
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=get_V))
+    elif event.message.text=="My info":
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=str(event)))
