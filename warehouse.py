@@ -14,7 +14,7 @@ handler = WebhookHandler(config.get('line-bot', 'channel_secret')) #Channel secr
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template("template\\home.html")
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
 def callback():
