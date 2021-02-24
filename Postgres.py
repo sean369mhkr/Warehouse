@@ -27,7 +27,7 @@ class main():
 #        self.return_value+="\n__init__\n"
         self.Text=Text.split("\n")
         self.Text.pop(0)
-        DATABASE_URL = os.popen('heroku config:get DATABASE_URL -a linebot0223').read()[:-1]
+        DATABASE_URL = os.environ['DATABASE_URL']
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cursor = self.conn.cursor()
         datetime.datetime.now
