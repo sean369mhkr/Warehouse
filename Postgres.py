@@ -57,11 +57,32 @@ class main():
         return self.return_value
             
     def reduce(self):
-        pass
-#        self.return_value+="write\n"
-#        for i in self.Text:
-#            self.return_value+=i+"\n"
-#        return self.return_value
+        for i in self.Text:
+            inputdata=i.split(" ")
+            item=inputdata[0]
+            count=inputdata[1]
+            SQL_order = f"SELECT * FROM warehouse WHERE item='{item}';"
+            self.cursor.execute(SQL_order)
+            temp=self.cursor.fetchone()
+            if temp==None:
+                self.return_value=f"No item {item};"
+                return self.return_value
+            elif(float(temp[1])<float(count)):
+                self.return_value=f"item {item} only {str(temp[1])};"
+            else:
+                count=str(float(temp[1])-float(count))
+                SQL_order = f"UPDATE warehouse SET count = {count} WHERE item ='{item}'"
+            try:
+                self.cursor.execute(SQL_order)
+                self.conn.commit()
+                self.return_value+="Success"
+            except:
+                self.return_value+="Fail\n"
+                self.return_value+="例子:雞蛋 2 顆\n"
+                break
+        self.cursor.close()
+        self.conn.close()
+        return self.return_value
     def read(self):
         SQL_order = "SELECT * FROM warehouse;"
         self.cursor.execute(SQL_order)
